@@ -6,6 +6,9 @@ public class Empresa {
     private String email;
     private long ID;
 
+    public Empresa() {
+    }
+    
     public Empresa(String nome, String cnpj, String email, long ID) {
         this.nome = nome;
         this.cnpj = cnpj;

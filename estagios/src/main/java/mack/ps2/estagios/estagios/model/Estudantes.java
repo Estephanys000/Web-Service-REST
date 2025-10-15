@@ -1,3 +1,5 @@
+package mack.ps2.estagios.estagios.model;
+
 import java.time.LocalDate;
 
 public class Estudantes {
@@ -7,39 +9,39 @@ public class Estudantes {
     private String nome;
     private String email;
     private LocalDate nascimento;
-    private Int anoIngresso;
+    private int anoIngresso;
 
     //MÉTODO CONSTRUTOR
 
-    public Estudante (long ID, String nome, String email, LocalDate dataNascimento, Int anoIngresso){
-        this.id = id;
+    public Estudantes (long id, String nome, String email, LocalDate dataNascimento, int anoIngresso){
+        this.ID = id;
         this.nome = nome;
         this.email = email;
-        this.dataNascimento = dataNascimento;
+        this.nascimento = dataNascimento;
         this.anoIngresso = anoIngresso;
     }
 
     //CONSTRUTOR VAZIO
 
-    public Estudante (){
+    public Estudantes(){
 
     }
 
     //GET E SET
 
     public long getId(){
-        return id;
+        return ID;
     }
 
     public void setId(long id){
-        this.id = id;
+        this.ID = id;
     }
 
     public String getNome(){
         return nome;
     }
 
-    public void setNome(){
+    public void setNome(String nome){
         this.nome = nome;
     }
 
@@ -47,23 +49,23 @@ public class Estudantes {
         return email;
     }
 
-    public void setEmail(){
+    public void setEmail(String email){
         this.email = email;
     }
 
     public LocalDate getDataNascimento(){
-        return dataNascimento;
+        return nascimento;
     }
 
-    public void setDataNascimeto(){
-        this.dataNascimento = dataNascimento;
+    public void setDataNascimeto(LocalDate nascimento){
+        this.nascimento = nascimento;
     }
 
-    public Int getAnoIngresso(){
-        return anoIngresso = anoIngresso;
+    public int getAnoIngresso(){
+        return anoIngresso;
     }
 
-    public void setAnoIngresso(){
+    public void setAnoIngresso(int anoIngresso){
         this.anoIngresso = anoIngresso;
     }
 
