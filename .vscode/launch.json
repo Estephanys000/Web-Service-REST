@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-EstagiosApplication<estagios>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "mack.ps2.estagios.estagios.EstagiosApplication",
+            "projectName": "estagios",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
