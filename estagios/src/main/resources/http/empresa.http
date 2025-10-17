@@ -1,0 +1,30 @@
+@host = http://localhost:8080
+
+### GET - Listar todas as empresas
+GET {{host}}/empresas
+
+### GET - Obter empresa por ID (ex: 1)
+GET {{host}}/empresas/1
+
+### POST - Criar nova empresa
+POST {{host}}/empresas
+Content-Type: application/json
+
+{
+    "nome": "Nova Tech Soluções",
+    "cnpj": "44.555.666/0001-77",
+    "emailContato": "contato@novatech.com"
+}
+
+### PUT - Atualizar empresa com ID (ex: 2)
+PUT {{host}}/empresas/2
+Content-Type: application/json
+
+{
+    "nome": "Beta Comércio e Varejo ME",
+    "cnpj": "98.765.432/0001-10",
+    "emailContato": "novocontato@beta.com"
+}
+
+### DELETE - Deletar empresa com ID (ex: 5)
+DELETE {{host}}/empresas/5

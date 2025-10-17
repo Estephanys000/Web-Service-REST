@@ -1,0 +1,34 @@
+@host = http://localhost:8080
+
+### GET - Listar todas as vagas
+GET {{host}}/vagas
+
+### GET - Obter vaga por ID (ex: 2)
+GET {{host}}/vagas/2
+
+### POST - Criar nova vaga
+POST {{host}}/vagas
+Content-Type: application/json
+
+{
+    "titulo": "Estágio em TI",
+    "descricao": "Vaga de estágio para atuar com suporte e desenvolvimento.",
+    "publicacao": "2025-10-15",
+    "ativo": true,
+    "idEmpresa": 3
+}
+
+### PUT - Atualizar vaga com ID (ex: 1)
+PUT {{host}}/vagas/1
+Content-Type: application/json
+
+{
+    "titulo": "Desenvolvedor Java Sênior",
+    "descricao": "Atuação em projetos backend com Java e Spring. Experiência desejada em APIs REST e Microsserviços.",
+    "publicacao": "2025-10-01",
+    "ativo": true,
+    "idEmpresa": 1
+}
+
+### DELETE - Deletar vaga com ID (ex: 7)
+DELETE {{host}}/vagas/7

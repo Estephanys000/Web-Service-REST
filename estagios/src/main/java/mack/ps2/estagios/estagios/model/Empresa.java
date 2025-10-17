@@ -4,12 +4,12 @@ public class Empresa {
     private String nome;
     private String cnpj;
     private String email;
-    private long ID;
+    private Long ID;
 
     public Empresa() {
     }
     
-    public Empresa(String nome, String cnpj, String email, long ID) {
+    public Empresa(String nome, String cnpj, String email, Long ID) {
         this.nome = nome;
         this.cnpj = cnpj;
         this.email = email;
@@ -34,10 +34,10 @@ public class Empresa {
     public void setEmail(String email) {
         this.email = email;
     }
-    public long getID() {
+    public Long getID() {
         return ID;
     }
-    public void setID(int iD) {
-        ID = iD;
+    public void setID(Long ID) {
+        this.ID = ID;
     }
 }

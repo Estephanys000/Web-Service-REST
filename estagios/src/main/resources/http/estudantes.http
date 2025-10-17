@@ -1,0 +1,32 @@
+@host = http://localhost:8080
+
+### GET - Listar todos os estudantes
+GET {{host}}/estudantes
+
+### GET - Obter estudante por ID (ex: 3)
+GET {{host}}/estudantes/3
+
+### POST - Criar novo estudante
+POST {{host}}/estudantes
+Content-Type: application/json
+
+{
+  "nome": "Mariana Costa",
+  "email": "mari.costa@email.com",
+  "nascimento": "2004-05-20",
+  "anoIngresso": 2022
+}
+
+### PUT - Atualizar estudante com ID (ex: 4)
+PUT {{host}}/estudantes/4
+Content-Type: application/json
+
+{
+  "nome": "Lucas Pereira Santos",
+  "email": "lucas.ps@email.com",
+  "nascimento": "2002-04-11",
+  "anoIngresso": 2020
+}
+
+### DELETE - Deletar estudante com ID (ex: 10)
+DELETE {{host}}/estudantes/10
