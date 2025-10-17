@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class Estudantes {
 
     //ATRIBUTOS
-    private long ID;
+    private Long ID;
     private String nome;
     private String email;
     private LocalDate nascimento;
@@ -13,7 +13,7 @@ public class Estudantes {
 
     //MÉTODO CONSTRUTOR
 
-    public Estudantes (long id, String nome, String email, LocalDate dataNascimento, int anoIngresso){
+    public Estudantes (Long id, String nome, String email, LocalDate dataNascimento, int anoIngresso){
         this.ID = id;
         this.nome = nome;
         this.email = email;
@@ -29,11 +29,11 @@ public class Estudantes {
 
     //GET E SET
 
-    public long getId(){
+    public Long getId(){
         return ID;
     }
 
-    public void setId(long id){
+    public void setId(Long id){
         this.ID = id;
     }
 
@@ -57,7 +57,7 @@ public class Estudantes {
         return nascimento;
     }
 
-    public void setDataNascimeto(LocalDate nascimento){
+    public void setDataNascimento(LocalDate nascimento){
         this.nascimento = nascimento;
     }
 

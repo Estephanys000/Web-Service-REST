@@ -4,16 +4,29 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import mack.ps2.estagios.estagios.model.Estudantes;
 
 @RestController
+@RequestMapping ("/estudante")
 public class EstudanteController {
     private List <Estudantes> estudantes;
+    private final AtomicLong counter = new AtomicLong();
 
     public EstudanteController(){
 
-        this.estudantes = new ArrayList();
+        this.estudantes = new ArrayList <Estudantes> ();
     
         estudantes.add(new Estudantes(1L, "Ana Paula Souza", "ana.souza@email.com", LocalDate.parse("2002-03-15"), 2020));
         estudantes.add(new Estudantes(2L, "Carlos Henrique Lima", "carlos.lima@email.com", LocalDate.parse("2001-10-22"), 2019));
@@ -35,19 +48,17 @@ public class EstudanteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Estudantes> getById(@PathVariable Long id) {
-        Optional<Estudante> estudante = estudantes.stream().filter(e -> e.getId().equals(id)).findFirst();
+        Optional<Estudantes> estudante = estudantes.stream().filter(e -> e.getId().equals(id)).findFirst();
         return estudante.map(ResponseEntity::ok)
                       .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Estudantes create(@RequestBody Estudantes novoEstudante) {
-        int proximoId;
-        novoEstudante.setId(proximoId++);
-        estudantes.add(novoEstudante);
-        return novoEstudante;
+   @PostMapping
+    public Estudantes createEstudante(@RequestBody Estudantes estudante) {
+        estudante.setId(counter.incrementAndGet());
+        estudantes.add(estudante);
+        return estudante;
     }
 
     
@@ -60,7 +71,7 @@ public class EstudanteController {
             
             estudante.setNome(estudanteAtualizado.getNome());
             estudante.setEmail(estudanteAtualizado.getEmail());
-            estudante.setNascimento(estudanteAtualizado.getDataNascimento());
+            estudante.setDataNascimento(estudanteAtualizado.getDataNascimento());
             estudante.setAnoIngresso(estudanteAtualizado.getAnoIngresso());
             return ResponseEntity.ok(estudante);
         } else {
