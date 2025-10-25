@@ -9,10 +9,11 @@ import jakarta.persistence.Id;
 public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
     private String nome;
     private String cnpj;
     private String email;
-    private Long ID;
+  
 
     public Empresa() {
     }
@@ -48,4 +49,5 @@ public class Empresa {
     public void setID(Long ID) {
         this.ID = ID;
     }
+
 }

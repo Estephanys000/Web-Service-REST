@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmpresaRepo extends JpaRepository<Empresa, Long> {
-    // JpaRepository já fornece
-    // findAll(), findById(), save(), deleteById(), etc.
 }

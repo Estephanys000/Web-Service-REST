@@ -1,7 +1,7 @@
 // src/main/java/mack/ps2/estagios/estagios/controllers/EstudanteController.java
-package mack.ps2.estagios.estagios.controllers;
+package mack.ps2.estagios.estagios.controller;
 
-import mack.ps2.estagios.estagios.models.Estudante;
+import mack.ps2.estagios.estagios.model.Estudante;
 import mack.ps2.estagios.estagios.repositories.EstudanteRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +43,7 @@ public class EstudanteController {
             Estudante estudanteExistente = estudanteOptional.get();
             estudanteExistente.setNome(estudanteAtualizado.getNome());
             estudanteExistente.setEmail(estudanteAtualizado.getEmail());
-            estudanteExistente.setNascimento(estudanteAtualizado.getNascimento());
+            estudanteExistente.setDataNascimento(estudanteAtualizado.getDataNascimento());
             estudanteExistente.setAnoIngresso(estudanteAtualizado.getAnoIngresso());
 
             Estudante estudanteSalvo = estudanteRepo.save(estudanteExistente);
