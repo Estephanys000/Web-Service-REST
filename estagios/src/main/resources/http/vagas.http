@@ -31,4 +31,4 @@ Content-Type: application/json
 }
 
 ### DELETE - Deletar vaga com ID (ex: 7)
-DELETE {{host}}/vagas/7
+DELETE {{host}}/vagas/1

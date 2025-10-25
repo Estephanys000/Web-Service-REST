@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ### PUT - Atualizar estudante com ID (ex: 4)
-PUT {{host}}/estudantes/4
+PUT {{host}}/estudantes/1
 Content-Type: application/json
 
 {

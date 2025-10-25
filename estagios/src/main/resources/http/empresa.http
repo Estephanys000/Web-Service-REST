@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### PUT - Atualizar empresa com ID (ex: 2)
-PUT {{host}}/empresas/2
+PUT {{host}}/empresas/1
 Content-Type: application/json
 
 {
