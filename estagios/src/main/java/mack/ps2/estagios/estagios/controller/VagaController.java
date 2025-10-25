@@ -6,11 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import mack.ps2.estagios.estagios.repositories.VagaRepo;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
+
 
 @RestController
 @RequestMapping("/vagas")
