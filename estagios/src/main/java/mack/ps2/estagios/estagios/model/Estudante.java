@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Estudantes {
+public class Estudante {
 
     //ATRIBUTOS
     @Id
@@ -20,7 +20,7 @@ public class Estudantes {
 
     //MÉTODO CONSTRUTOR
 
-    public Estudantes (Long id, String nome, String email, LocalDate dataNascimento, int anoIngresso){
+    public Estudante (Long id, String nome, String email, LocalDate dataNascimento, int anoIngresso){
         this.ID = id;
         this.nome = nome;
         this.email = email;
@@ -30,7 +30,7 @@ public class Estudantes {
 
     //CONSTRUTOR VAZIO
 
-    public Estudantes(){
+    public Estudante(){
 
     }
 
