@@ -1,4 +1,3 @@
-// src/main/java/mack/ps2/estagios/estagios/controllers/EstudanteController.java
 package mack.ps2.estagios.estagios.controller;
 
 import mack.ps2.estagios.estagios.model.Estudante;
@@ -41,10 +40,15 @@ public class EstudanteController {
 
         if (estudanteOptional.isPresent()) {
             Estudante estudanteExistente = estudanteOptional.get();
+            
+            
             estudanteExistente.setNome(estudanteAtualizado.getNome());
             estudanteExistente.setEmail(estudanteAtualizado.getEmail());
             estudanteExistente.setDataNascimento(estudanteAtualizado.getDataNascimento());
             estudanteExistente.setAnoIngresso(estudanteAtualizado.getAnoIngresso());
+            
+            
+            estudanteExistente.setAreaDeInteresse(estudanteAtualizado.getAreaDeInteresse());
 
             Estudante estudanteSalvo = estudanteRepo.save(estudanteExistente);
             return ResponseEntity.ok(estudanteSalvo);

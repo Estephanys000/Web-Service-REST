@@ -5,37 +5,43 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Estudante {
 
-    //ATRIBUTOS
+   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
+    
     private String nome;
     private String email;
     private LocalDate nascimento;
     private int anoIngresso;
 
-    //MÉTODO CONSTRUTOR
+    
+    @ManyToOne
+    @JoinColumn(name = "area_id") 
+    private Area areaDeInteresse;
 
-    public Estudante (Long id, String nome, String email, LocalDate dataNascimento, int anoIngresso){
+    
+    public Estudante (Long id, String nome, String email, LocalDate dataNascimento, int anoIngresso, Area areaDeInteresse){
         this.ID = id;
         this.nome = nome;
         this.email = email;
         this.nascimento = dataNascimento;
         this.anoIngresso = anoIngresso;
+        this.areaDeInteresse = areaDeInteresse;
     }
 
-    //CONSTRUTOR VAZIO
-
+    
     public Estudante(){
-
+       
     }
 
-    //GET E SET
-
+    
     public Long getId(){
         return ID;
     }
@@ -75,7 +81,13 @@ public class Estudante {
     public void setAnoIngresso(int anoIngresso){
         this.anoIngresso = anoIngresso;
     }
+    
 
+    public Area getAreaDeInteresse() {
+        return areaDeInteresse;
+    }
 
-
+    public void setAreaDeInteresse(Area areaDeInteresse) {
+        this.areaDeInteresse = areaDeInteresse;
+    }
 }
