@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Vaga {
@@ -14,18 +16,21 @@ public class Vaga {
     private Long id;
     private String titulo;
     private String descricao;
-    private LocalDate publicacao;
+    private LocalDate dataPublicacao;
     private boolean ativo;
     private Long idEmpresa;
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
 
     public Vaga() {
     }
 
-    public Vaga(Long id, String titulo, String descricao, LocalDate publicacao, boolean ativo, Long idEmpresa) {
+    public Vaga(Long id, String titulo, String descricao, LocalDate dataPublicacao, boolean ativo, Long idEmpresa) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
-        this.publicacao = publicacao;
+        this.dataPublicacao = dataPublicacao;
         this.ativo = ativo;
         this.idEmpresa = idEmpresa;
     }
@@ -55,12 +60,12 @@ public class Vaga {
         this.descricao = descricao;
     }
 
-    public LocalDate getPublicacao() {
-        return publicacao;
+    public LocalDate getdataPublicacao() {
+        return dataPublicacao;
     }
 
-    public void setPublicacao(LocalDate publicacao) {
-        this.publicacao = publicacao;
+    public void setdataPublicacao(LocalDate dataPublicacao) {
+        this.dataPublicacao = dataPublicacao;
     }
 
     public boolean isAtivo() {
@@ -77,5 +82,13 @@ public class Vaga {
 
     public void setIdEmpresa(Long idEmpresa) {
         this.idEmpresa = idEmpresa;
+    }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
 }

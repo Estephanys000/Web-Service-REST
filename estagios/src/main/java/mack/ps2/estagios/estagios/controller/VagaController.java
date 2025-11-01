@@ -44,7 +44,7 @@ public class VagaController {
             Vaga vagaExistente = vagaOptional.get();
             vagaExistente.setTitulo(vagaAtualizada.getTitulo());
             vagaExistente.setDescricao(vagaAtualizada.getDescricao());
-            vagaExistente.setPublicacao(vagaAtualizada.getPublicacao());
+            vagaExistente.setdataPublicacao(vagaAtualizada.getdataPublicacao());
             vagaExistente.setAtivo(vagaAtualizada.isAtivo());
             vagaExistente.setIdEmpresa(vagaAtualizada.getIdEmpresa());
 
