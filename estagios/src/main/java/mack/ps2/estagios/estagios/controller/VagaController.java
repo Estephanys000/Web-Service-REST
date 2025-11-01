@@ -44,9 +44,8 @@ public class VagaController {
             Vaga vagaExistente = vagaOptional.get();
             vagaExistente.setTitulo(vagaAtualizada.getTitulo());
             vagaExistente.setDescricao(vagaAtualizada.getDescricao());
-            vagaExistente.setdataPublicacao(vagaAtualizada.getdataPublicacao());
+            vagaExistente.setDataPublicacao(vagaAtualizada.getDataPublicacao());
             vagaExistente.setAtivo(vagaAtualizada.isAtivo());
-            vagaExistente.setIdEmpresa(vagaAtualizada.getIdEmpresa());
 
             Vaga vagaSalva = vagaRepo.save(vagaExistente);
             return ResponseEntity.ok(vagaSalva);

@@ -3,32 +3,36 @@
 ### GET - Listar todas as vagas
 GET {{host}}/vagas
 
-### GET - Obter vaga por ID (ex: 2)
-GET {{host}}/vagas/2
+### GET - Obter vaga por ID
+GET {{host}}/vagas/1
 
 ### POST - Criar nova vaga
 POST {{host}}/vagas
 Content-Type: application/json
 
 {
-    "titulo": "Estágio em TI",
-    "descricao": "Vaga de estágio para atuar com suporte e desenvolvimento.",
-    "publicacao": "2025-10-15",
+    "titulo": "Desenvolvedor Backend Java",
+    "descricao": "Atuação em projetos com Spring Boot e microsserviços.",
+    "dataPublicacao": "2025-11-01",
     "ativo": true,
-    "idEmpresa": 3
+    "empresa": {
+        "id": 1
+    }
 }
 
-### PUT - Atualizar vaga com ID (ex: 1)
+### PUT - Atualizar vaga com ID
 PUT {{host}}/vagas/1
 Content-Type: application/json
 
 {
-    "titulo": "Desenvolvedor Java Sênior",
-    "descricao": "Atuação em projetos backend com Java e Spring. Experiência desejada em APIs REST e Microsserviços.",
-    "publicacao": "2025-10-01",
+    "titulo": "Desenvolvedor Backend Java (Foco em Cloud)",
+    "descricao": "Atuação em projetos com Spring Boot e microsserviços AWS/Azure.",
+    "dataPublicacao": "2025-11-01",
     "ativo": true,
-    "idEmpresa": 1
+    "empresa": {
+        "id": 1
+    }
 }
 
-### DELETE - Deletar vaga com ID (ex: 7)
-DELETE {{host}}/vagas/1
+### DELETE - Deletar vaga com ID
+DELETE {{host}}/vagas/2

@@ -14,12 +14,11 @@ public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
-    private String nome;
+    private String nomeFantasia;
     private String cnpj;
     private String email;
-    @OneToMany(mappedBy = "vagaEstagio")
-    @JsonIgnore
-    private Set<Inscricao> inscricoes;
+    private String endereco;
+    private String descricao;
 
     @OneToMany(mappedBy = "empresa")
     @JsonIgnore
@@ -28,19 +27,19 @@ public class Empresa {
     public Empresa() {
     }
 
-    public Empresa(String nome, String cnpj, String email, Long ID) {
-        this.nome = nome;
+    public Empresa(String nomeFantasia, String cnpj, String email, Long ID) {
+        this.nomeFantasia = nomeFantasia;
         this.cnpj = cnpj;
         this.email = email;
         this.ID = ID;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeFantasia() {
+        return nomeFantasia;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeFantasia(String nomeFantasia) {
+        this.nomeFantasia = nomeFantasia;
     }
 
     public String getCnpj() {
@@ -67,20 +66,28 @@ public class Empresa {
         this.ID = ID;
     }
 
-    public Set<Inscricao> getInscricoes() {
-        return inscricoes;
-    }
-
-    public void setInscricoes(Set<Inscricao> inscricoes) {
-        this.inscricoes = inscricoes;
-    }
-
     public Set<Vaga> getVagas() {
         return vagas;
     }
 
     public void setVagas(Set<Vaga> vagas) {
         this.vagas = vagas;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
 }

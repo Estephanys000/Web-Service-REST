@@ -3,30 +3,43 @@
 ### GET - Listar todos os estudantes
 GET {{host}}/estudantes
 
-### GET - Obter estudante por ID (ex: 3)
-GET {{host}}/estudantes/3
+### GET - Obter estudante por ID 
+GET {{host}}/estudantes/1
 
-### POST - Criar novo estudante
+### POST - Criar novo estudante 
 POST {{host}}/estudantes
 Content-Type: application/json
 
 {
-  "nome": "Mariana Costa",
-  "email": "mari.costa@email.com",
-  "nascimento": "2004-05-20",
-  "anoIngresso": 2022
+    "nome": "Carla Mendes",
+    "email": "carla.mendes@email.com",
+    "anoIngresso": 2022
 }
 
-### PUT - Atualizar estudante com ID (ex: 4)
+### PUT - Atualizar estudante com ID 
 PUT {{host}}/estudantes/1
 Content-Type: application/json
 
 {
-  "nome": "Lucas Pereira Santos",
-  "email": "lucas.ps@email.com",
-  "nascimento": "2002-04-11",
-  "anoIngresso": 2020
+    "nome": "Carla Mendes Souza",
+    "email": "carla.souza@novoemail.com",
+    "anoIngresso": 2022
 }
 
-### DELETE - Deletar estudante com ID (ex: 10)
-DELETE {{host}}/estudantes/10
+### PUT - Associar Áreas de Interesse a um Estudante
+PUT {{host}}/estudantes/1
+Content-Type: application/json
+
+{
+    "nome": "Carla Mendes Souza",
+    "email": "carla.souza@novoemail.com",
+    "anoIngresso": 2022,
+    "areasDeInteresse": [
+        { "id": 1 },
+        { "id": 2 }
+    ]
+}
+
+
+### DELETE - Deletar estudante com ID (ex: 2)
+DELETE {{host}}/estudantes/2

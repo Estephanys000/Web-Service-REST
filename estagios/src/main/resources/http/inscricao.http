@@ -1,0 +1,42 @@
+@host = http://localhost:8080
+
+### GET - Listar todas as inscrições
+GET {{host}}/inscricoes
+
+### GET - Obter inscrição por ID (ex: 1)
+GET {{host}}/inscricoes/1
+
+### POST - Criar nova inscrição
+POST {{host}}/inscricoes
+Content-Type: application/json
+
+{
+    "dataInscricao": "2025-11-01",
+    "status": "Pendente",
+    "mensagemApresentacao": "Tenho muito interesse na vaga, meu TCC foi sobre microsserviços.",
+    "estudante": {
+        "id": 1
+    },
+    "vaga": {
+        "id": 1
+    }
+}
+
+### PUT - Atualizar inscrição com ID 
+PUT {{host}}/inscricoes/1
+Content-Type: application/json
+
+{
+    "dataInscricao": "2025-11-01",
+    "status": "Em Revisão",
+    "mensagemApresentacao": "Tenho muito interesse na vaga, meu TCC foi sobre microsserviços.",
+    "estudante": {
+        "id": 1
+    },
+    "vaga": {
+        "id": 1
+    }
+}
+
+### DELETE - Deletar inscrição com ID (ex: 2)
+DELETE {{host}}/inscricoes/2

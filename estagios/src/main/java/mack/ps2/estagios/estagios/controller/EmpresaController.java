@@ -43,9 +43,11 @@ public class EmpresaController {
 
         if (empresaOptional.isPresent()) {
             Empresa empresaExistente = empresaOptional.get();
-            empresaExistente.setNome(empresaAtualizada.getNome());
+            empresaExistente.setNomeFantasia(empresaAtualizada.getNomeFantasia());
             empresaExistente.setCnpj(empresaAtualizada.getCnpj());
             empresaExistente.setEmail(empresaAtualizada.getEmail());
+            empresaExistente.setEndereco(empresaAtualizada.getEndereco());
+            empresaExistente.setDescricao(empresaAtualizada.getDescricao());
 
 
             Empresa empresaSalva = empresaRepo.save(empresaExistente); 

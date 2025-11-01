@@ -26,8 +26,22 @@ public class AreaController {
     @GetMapping("/{id}")
     public ResponseEntity<Area> getAreaById(@PathVariable Long id) {
         return areaRepo.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Area> updateArea(@PathVariable Long id, @RequestBody Area areaAtualizada) {
+
+        return areaRepo.findById(id)
+                .map(areaExistente -> {
+                    areaExistente.setNome(areaAtualizada.getNome());
+                    Area areaSalva = areaRepo.save(areaExistente);
+                    return ResponseEntity.ok(areaSalva);
+                })
+                .orElseGet(() -> {
+                    return ResponseEntity.notFound().build();
+                });
     }
 
     @DeleteMapping("/{id}")

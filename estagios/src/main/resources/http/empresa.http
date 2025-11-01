@@ -3,28 +3,32 @@
 ### GET - Listar todas as empresas
 GET {{host}}/empresas
 
-### GET - Obter empresa por ID (ex: 1)
+### GET - Obter empresa por ID 
 GET {{host}}/empresas/1
 
-### POST - Criar nova empresa
+### POST - Criar nova empresa 
 POST {{host}}/empresas
 Content-Type: application/json
 
 {
-    "nome": "Nova Tech Soluções",
-    "cnpj": "44.555.666/0001-77",
-    "emailContato": "contato@novatech.com"
+    "nomeFantasia": "Tech Solutions S.A.",
+    "cnpj": "11.222.333/0001-44",
+    "email": "contato@techsolutions.com",
+    "endereco": "Av. Paulista, 1000",
+    "descricao": "Empresa de consultoria em TI."
 }
 
-### PUT - Atualizar empresa com ID (ex: 2)
+### PUT - Atualizar empresa com ID 
 PUT {{host}}/empresas/1
 Content-Type: application/json
 
 {
-    "nome": "Beta Comércio e Varejo ME",
-    "cnpj": "98.765.432/0001-10",
-    "emailContato": "novocontato@beta.com"
+    "nomeFantasia": "Tech Solutions & Inovação S.A.",
+    "cnpj": "11.222.333/0001-44",
+    "email": "contato@techsolutions.com",
+    "endereco": "Av. Paulista, 1000, 10º Andar",
+    "descricao": "Empresa líder em consultoria e desenvolvimento de software."
 }
 
-### DELETE - Deletar empresa com ID (ex: 5)
-DELETE {{host}}/empresas/5
+### DELETE - Deletar empresa com ID (ex: 3)
+DELETE {{host}}/empresas/2

@@ -1,0 +1,34 @@
+@host = http://localhost:8080
+
+### GET - Listar todas as áreas
+GET {{host}}/areas
+
+### GET - Obter área por ID
+GET {{host}}/areas/1
+
+### POST - Criar nova área
+POST {{host}}/areas
+Content-Type: application/json
+
+{
+    "nome": "Desenvolvimento Backend"
+}
+
+### POST - Criar segunda área
+POST {{host}}/areas
+Content-Type: application/json
+
+{
+    "nome": "Engenharia de Dados"
+}
+
+### PUT - Atualizar área com ID
+PUT {{host}}/areas/1
+Content-Type: application/json
+
+{
+    "nome": "Desenvolvimento Backend (Java/Spring)"
+}
+
+### DELETE - Deletar área com ID
+DELETE {{host}}/areas/3

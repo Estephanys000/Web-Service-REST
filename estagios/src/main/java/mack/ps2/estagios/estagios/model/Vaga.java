@@ -2,12 +2,17 @@
 package mack.ps2.estagios.estagios.model;
 
 import java.time.LocalDate;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Vaga {
@@ -18,21 +23,25 @@ public class Vaga {
     private String descricao;
     private LocalDate dataPublicacao;
     private boolean ativo;
-    private Long idEmpresa;
+
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
+    @OneToMany(mappedBy = "vaga")
+    @JsonIgnore
+    private Set<Inscricao> inscricoes;
+
     public Vaga() {
     }
 
-    public Vaga(Long id, String titulo, String descricao, LocalDate dataPublicacao, boolean ativo, Long idEmpresa) {
+    public Vaga(Long id, String titulo, String descricao, LocalDate dataPublicacao, boolean ativo) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.dataPublicacao = dataPublicacao;
         this.ativo = ativo;
-        this.idEmpresa = idEmpresa;
+
     }
 
     // Getters e Setters
@@ -60,11 +69,11 @@ public class Vaga {
         this.descricao = descricao;
     }
 
-    public LocalDate getdataPublicacao() {
+    public LocalDate getDataPublicacao() {
         return dataPublicacao;
     }
 
-    public void setdataPublicacao(LocalDate dataPublicacao) {
+    public void setDataPublicacao(LocalDate dataPublicacao) {
         this.dataPublicacao = dataPublicacao;
     }
 
@@ -76,13 +85,6 @@ public class Vaga {
         this.ativo = ativo;
     }
 
-    public Long getIdEmpresa() {
-        return idEmpresa;
-    }
-
-    public void setIdEmpresa(Long idEmpresa) {
-        this.idEmpresa = idEmpresa;
-    }
 
     public Empresa getEmpresa() {
         return empresa;
@@ -90,5 +92,13 @@ public class Vaga {
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public Set<Inscricao> getInscricoes() {
+        return inscricoes;
+    }
+
+    public void setInscricoes(Set<Inscricao> inscricoes) {
+        this.inscricoes = inscricoes;
     }
 }
