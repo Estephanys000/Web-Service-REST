@@ -1,5 +1,5 @@
 package mack.ps2.estagios.estagios.controller;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import mack.ps2.estagios.estagios.model.Vaga;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import mack.ps2.estagios.estagios.repositories.VagaRepo;
 import java.util.List;
 import java.util.Optional;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/vagas")
 public class VagaController {

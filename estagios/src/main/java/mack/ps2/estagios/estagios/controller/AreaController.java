@@ -1,5 +1,5 @@
 package mack.ps2.estagios.estagios.controller;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import mack.ps2.estagios.estagios.model.Area;
 import mack.ps2.estagios.estagios.repositories.AreaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/areas")
 public class AreaController {

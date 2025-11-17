@@ -1,5 +1,5 @@
 package mack.ps2.estagios.estagios.controller;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import mack.ps2.estagios.estagios.model.Estudante;
 import mack.ps2.estagios.estagios.repositories.EstudanteRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/estudantes")
 public class EstudanteController {
