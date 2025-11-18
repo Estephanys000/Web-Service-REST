@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portal de Estágios Mackenzie</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .profile-selection {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+        }
+        .profile-selection a {
+            text-decoration: none;
+        }
+        .profile-selection button {
+            font-size: 1.5rem;
+            padding: 20px 40px;
+            min-width: 250px;
+        }
+        .admin-links {
+            margin-top: 50px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .admin-links h3 {
+            color: #555;
+        }
+        .admin-links a {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Portal de Estágios</h1>
+        <p>Selecione seu perfil para continuar</p>
+
+        <div class="profile-selection">
+            <a href="/portal-empresa.html"><button>Sou Empresa</button></a>
+            <a href="/portal-aluno.html"><button>Sou Aluno</button></a>
+        </div>
+
+        <div class="admin-links">
+            <h3>Administração do Sistema</h3>
+            <p>Use estas páginas para cadastrar as entidades base:</p>
+            <a href="/gerenciar-empresas.html">Gerenciar Empresas</a>
+            <a href="/gerenciar-estudantes.html">Gerenciar Estudantes</a>
+            <a href="/gerenciar-areas.html">Gerenciar Áreas</a>
+        </div>
+    </div>
+</body>
+</html>

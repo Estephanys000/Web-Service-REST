@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portal do Aluno</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+    <style>
+        .dashboard-section { display: none; }
+        .areas-container {
+            margin: 10px 0; padding: 10px;
+            border: 1px solid #ddd; border-radius: 5px;
+        }
+        .areas-container label {
+            margin-right: 15px; display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1><a href="/index.html" style="text-decoration: none;">🏠</a> Portal do Aluno</h1>
+     <a href="/index.html">Voltar para a Página Inicial</a>
+    <hr>
+    
+    <label for="estudanteLoginSelect">Selecione seu Nome para Continuar:</label>
+    <select id="estudanteLoginSelect" onchange="carregarDashboardEstudante()">
+        <option value="">Carregando estudantes...</option>
+    </select>
+    <hr>
+
+
+    <section id="secaoPerfil" class="dashboard-section">
+        <h2>Meu Perfil</h2>
+        <input type="hidden" id="estudanteId">
+        
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome">
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email">
+        <br>
+        <label for="anoIngresso">Ano de Ingresso:</label>
+        <input type="number" id="anoIngresso" min="1900" max="2100">
+        <br>
+
+        <div class="areas-container">
+            <label>Minhas Áreas de Interesse:</label>
+            <div id="areasCheckboxContainer">Carregando áreas...</div>
+        </div>
+
+        <button onclick="atualizarEstudante()">Salvar Alterações do Perfil</button>
+    </section>
+
+    <!-- Vagas Abertas -->
+    <section id="secaoVagas" class="dashboard-section">
+        <h2>Vagas Abertas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th> <th>Empresa</th> <th>Descrição</th> <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="corpoTabelaVagas">
+                <!-- Vagas ativas -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        const URL_ESTUDANTES = '/estudantes';
+        const URL_VAGAS = '/vagas';
+        const URL_INSCRICOES = '/inscricoes';
+        const URL_AREAS = '/areas';
+
+        // Elementos do DOM
+        const estudanteLoginSelect = document.querySelector("#estudanteLoginSelect");
+        const secaoPerfil = document.querySelector("#secaoPerfil");
+        const secaoVagas = document.querySelector("#secaoVagas");
+        const corpoTabelaVagas = document.querySelector("#corpoTabelaVagas");
+        const areasContainer = document.querySelector("#areasCheckboxContainer");
+
+        // Inputs do Perfil
+        const estudanteIdInput = document.querySelector("#estudanteId");
+        const nomeInput = document.querySelector("#nome");
+        const emailInput = document.querySelector("#email");
+        const anoInput = document.querySelector("#anoIngresso");
+
+        let todasAsAreas = []; // Armazena as áreas carregadas
+
+        // Roda ao carregar
+        carregarEstudantesLogin();
+        carregarTodasAreas(); // Carrega as áreas uma vez
+
+       
+        //Carrega a lista de estudantes no <select> de login
+
+        function carregarEstudantesLogin() {
+            fetch(URL_ESTUDANTES)
+                .then(res => res.json())
+                .then(estudantes => {
+                    estudanteLoginSelect.innerHTML = '<option value="" disabled selected>Selecione seu nome</option>';
+                    estudantes.forEach(estudante => {
+                        const option = document.createElement('option');
+                        option.value = estudante.id;
+                        option.textContent = `${estudante.nome} (ID: ${estudante.id})`;
+                        estudanteLoginSelect.appendChild(option);
+                    });
+                })
+                .catch(erro => console.error('Erro ao carregar estudantes:', erro));
+        }
+
+        
+        //Carrega todas as áreas de interesse disponíveis
+
+        function carregarTodasAreas() {
+            fetch(URL_AREAS)
+                .then(res => res.json())
+                .then(areas => {
+                    todasAsAreas = areas; // Salva globalmente
+                })
+                .catch(erro => console.error("Erro ao carregar áreas:", erro));
+        }
+
+       
+        //Chamada ao selecionar um estudante no <select>
+      
+        function carregarDashboardEstudante() {
+            const idEstudante = estudanteLoginSelect.value;
+            if (!idEstudante) return;
+
+            // Mostra as seções do dashboard
+            secaoPerfil.style.display = 'block';
+            secaoVagas.style.display = 'block';
+
+            //Carrega o perfil do estudante
+            fetch(`${URL_ESTUDANTES}/${idEstudante}`)
+                .then(res => res.json())
+                .then(estudante => {
+                    estudanteIdInput.value = estudante.id;
+                    nomeInput.value = estudante.nome;
+                    emailInput.value = estudante.email;
+                    anoInput.value = estudante.anoIngresso;
+                    
+                    // Preenche os checkboxes de áreas
+                    preencherCheckboxesAreas(estudante.areasDeInteresse || []);
+                });
+            
+            //Carrega as vagas abertas
+            listarVagasAtivas(idEstudante);
+        }
+
+        
+        //Cria os checkboxes de área e marca os que o estudante já tem
+       
+        function preencherCheckboxesAreas(areasDoEstudante) {
+            areasContainer.innerHTML = "";
+            const idsAreasDoEstudante = areasDoEstudante.map(area => area.id);
+
+            todasAsAreas.forEach(area => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `area-perfil-${area.id}`;
+                checkbox.value = area.id;
+                checkbox.name = "areaPerfil";
+                
+                // Marca o checkbox se o ID da área estiver na lista do estudante
+                if (idsAreasDoEstudante.includes(area.id)) {
+                    checkbox.checked = true;
+                }
+
+                const label = document.createElement('label');
+                label.htmlFor = `area-perfil-${area.id}`;
+                label.textContent = area.nome;
+                
+                areasContainer.appendChild(checkbox);
+                areasContainer.appendChild(label);
+            });
+        }
+
+        
+        // Atualiza os dados do estudante (PUT request), incluindo as áreas
+       
+        function atualizarEstudante() {
+            const idEstudante = estudanteIdInput.value;
+
+            // Pega todos os checkboxes de área que estão marcados
+            const areasSelecionadas = [];
+            document.querySelectorAll("input[name='areaPerfil']:checked").forEach(checkbox => {
+                areasSelecionadas.push({ id: parseInt(checkbox.value, 10) });
+            });
+
+            const payload = {
+                id: idEstudante,
+                nome: nomeInput.value,
+                email: emailInput.value,
+                anoIngresso: parseInt(anoInput.value, 10),
+                areasDeInteresse: areasSelecionadas // Envia o array atualizado
+            };
+
+            fetch(`${URL_ESTUDANTES}/${idEstudante}`, {
+                method: "PUT",
+                body: JSON.stringify(payload),
+                headers: { "Content-type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Falha ao atualizar perfil");
+                alert("Perfil atualizado com sucesso!");
+            })
+            .catch(erro => alert(erro.message));
+        }
+
+       
+        //Carrega a tabela de vagas ativas
+        
+        function listarVagasAtivas(idEstudante) {
+            corpoTabelaVagas.innerHTML = "Carregando vagas...";
+            fetch(URL_VAGAS)
+                .then(res => res.json())
+                .then(vagas => {
+                    corpoTabelaVagas.innerHTML = ""; // Limpa
+                    const vagasAtivas = vagas.filter(vaga => vaga.ativo === true);
+                    
+                    if (vagasAtivas.length === 0) {
+                        corpoTabelaVagas.innerHTML = '<tr><td colspan="4">Nenhuma vaga aberta no momento.</td></tr>';
+                        return;
+                    }
+
+                    vagasAtivas.forEach(vaga => {
+                        let linha = corpoTabelaVagas.insertRow();
+                        linha.insertCell().textContent = vaga.titulo;
+                        linha.insertCell().textContent = vaga.empresa ? vaga.empresa.nomeFantasia : 'N/A';
+                        linha.insertCell().textContent = vaga.descricao;
+                        
+                        let celAcao = linha.insertCell();
+                        let btnInscrever = document.createElement('button');
+                        btnInscrever.textContent = 'Inscrever-se';
+                        btnInscrever.onclick = () => inscrever(idEstudante, vaga.id);
+                        celAcao.appendChild(btnInscrever);
+                    });
+                });
+        }
+
+       
+        //Inscreve o estudante "logado" em uma vaga
+        
+        function inscrever(idEstudante, idVaga) {
+            if (!idEstudante) { // Checagem dupla
+                alert("Erro: ID do estudante não encontrado.");
+                return;
+            }
+
+            const mensagem = prompt("Digite uma breve mensagem de apresentação (opcional):");
+
+            const payload = {
+                dataInscricao: new Date().toISOString().split('T')[0],
+                status: "Pendente",
+                mensagemApresentacao: mensagem,
+                estudante: { id: parseInt(idEstudante, 10) },
+                vaga: { id: idVaga }
+            };
+
+            fetch(URL_INSCRICOES, {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: { "Content-type": "application/json" }
+            })
+            .then(resposta => {
+                if (!resposta.ok) {
+                    return resposta.json().then(err => { 
+                        throw new Error(err.message || 'Erro desconhecido ao se inscrever.');
+                    });
+                }
+                return resposta.json();
+            })
+            .then(json => alert("Inscrição realizada com sucesso!"))
+            .catch(erro => alert("Falha na inscrição: " + erro.message));
+        }
+    </script>
+</body>
+</html>

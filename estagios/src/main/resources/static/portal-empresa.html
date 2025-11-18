@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portal da Empresa</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+    <style>
+        /* Esconde as seções do dashboard até o "login" */
+        .dashboard-section { display: none; }
+        #secaoCadastroVaga { display: none; }
+        /* Estilo para a lista de inscritos */
+        .inscritos-lista {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        .inscritos-lista li {
+            border-bottom: 1px dotted #ccc;
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1><a href="/index.html" style="text-decoration: none;">🏠</a> Portal da Empresa</h1>
+     <a href="/index.html">Voltar para a Página Inicial</a>
+    <hr>
+    
+    <!-- Seção de "Login" da Empresa -->
+    <label for="empresaLoginSelect">Selecione sua Empresa para Continuar:</label>
+    <select id="empresaLoginSelect" onchange="carregarDashboardEmpresa()">
+        <option value="">Carregando empresas...</option>
+    </select>
+    <hr>
+
+    <!-- Editar Perfil da Empresa -->
+    <section id="secaoPerfil" class="dashboard-section">
+        <h2>Meu Perfil</h2>
+        <input type="hidden" id="empresaId"> <!-- Guarda o ID da empresa -->
+        
+        <label for="nomeFantasia">Nome Fantasia:</label>
+        <input type="text" id="nomeFantasia">
+        <br>
+        <label for="cnpj">CNPJ:</label>
+        <input type="text" id="cnpj">
+        <br>
+        <label for="emailContato">Email de Contato:</label>
+        <input type="email" id="emailContato">
+        <br>
+        <label for="endereco">Endereço:</label>
+        <input type="text" id="endereco">
+        <br>
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" rows="3"></textarea>
+        <br>
+        <button onclick="atualizarEmpresa()">Salvar Alterações do Perfil</button>
+    </section>
+
+    <!--mGerenciamento de Vagas -->
+    <section id="secaoVagas" class="dashboard-section">
+        <h2>Minhas Vagas</h2>
+        <button onclick="mostrarFormularioVaga()">+ Cadastrar Nova Vaga</button>
+        
+        <!-- Formulário de Cadastro de Vaga -->
+        <div id="secaoCadastroVaga">
+            <h3>Nova Vaga</h3>
+            <label for="vagaTitulo">Título:</label>
+            <input type="text" id="vagaTitulo"><br>
+            <label for="vagaDescricao">Descrição:</label>
+            <textarea id="vagaDescricao" rows="3"></textarea><br>
+            <label for="vagaData">Data Publicação:</label>
+            <input type="date" id="vagaData"><br>
+            <button onclick="cadastrarVaga()">Salvar Vaga</button>
+            <button onclick="ocultarFormularioVaga()" class="button-outline">Cancelar</button>
+        </div>
+
+        <!-- Tabela de Vagas -->
+        <table id="tabelaVagasEmpresa">
+            <thead>
+                <tr>
+                    <th>ID</th> <th>Título</th> <th>Status</th> <th>Inscrições</th> <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="corpoTabelaVagas">
+                <!-- Vagas da empresa aqui -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Lista de Inscrições -->
+    <section id="secaoInscricoes" class="dashboard-section">
+        <h2 id="tituloInscricoes">Inscrições para...</h2>
+        <ul id="listaInscricoes" class="inscritos-lista">
+            <!-- Lista de inscritos -->
+        </ul>
+    </section>
+
+    <script>
+        const URL_EMPRESAS = '/empresas';
+        const URL_VAGAS = '/vagas';
+        const URL_INSCRICOES = '/inscricoes';
+
+        // Elementos do DOM
+        const empresaLoginSelect = document.querySelector("#empresaLoginSelect");
+        const secaoPerfil = document.querySelector("#secaoPerfil");
+        const secaoVagas = document.querySelector("#secaoVagas");
+        const secaoInscricoes = document.querySelector("#secaoInscricoes");
+        const secaoCadastroVaga = document.querySelector("#secaoCadastroVaga");
+        const corpoTabelaVagas = document.querySelector("#corpoTabelaVagas");
+        const listaInscricoes = document.querySelector("#listaInscricoes");
+        const tituloInscricoes = document.querySelector("#tituloInscricoes");
+        
+        // Inputs do Perfil
+        const empresaIdInput = document.querySelector("#empresaId");
+        const nomeFantasiaInput = document.querySelector("#nomeFantasia");
+        const cnpjInput = document.querySelector("#cnpj");
+        const emailInput = document.querySelector("#emailContato");
+        const enderecoInput = document.querySelector("#endereco");
+        const descricaoInput = document.querySelector("#descricao");
+
+        // Inputs da Vaga
+        const vagaTituloInput = document.querySelector("#vagaTitulo");
+        const vagaDescricaoInput = document.querySelector("#vagaDescricao");
+        const vagaDataInput = document.querySelector("#vagaData");
+
+        // Roda ao carregar
+        carregarEmpresasLogin();
+
+       
+        //Carrega a lista de empresas no <select> de login
+        
+        function carregarEmpresasLogin() {
+            fetch(URL_EMPRESAS)
+                .then(res => res.json())
+                .then(empresas => {
+                    empresaLoginSelect.innerHTML = '<option value="" disabled selected>Selecione sua empresa</option>';
+                    empresas.forEach(empresa => {
+                        const option = document.createElement('option');
+                        option.value = empresa.id;
+                        option.textContent = empresa.nomeFantasia;
+                        empresaLoginSelect.appendChild(option);
+                    });
+                })
+                .catch(erro => console.error('Erro ao carregar empresas:', erro));
+        }
+
+        
+        //Chamada ao selecionar uma empresa no <select>
+       
+        function carregarDashboardEmpresa() {
+            const idEmpresa = empresaLoginSelect.value;
+            if (!idEmpresa) return;
+
+            // Mostra as seções do dashboard
+            secaoPerfil.style.display = 'block';
+            secaoVagas.style.display = 'block';
+            
+            // Carrega o perfil da empresa
+            fetch(`${URL_EMPRESAS}/${idEmpresa}`)
+                .then(res => res.json())
+                .then(empresa => {
+                    empresaIdInput.value = empresa.id;
+                    nomeFantasiaInput.value = empresa.nomeFantasia;
+                    cnpjInput.value = empresa.cnpj;
+                    emailInput.value = empresa.emailContato;
+                    enderecoInput.value = empresa.endereco;
+                    descricaoInput.value = empresa.descricao;
+                });
+            
+            // Carrega as vagas da empresa
+            listarMinhasVagas(idEmpresa);
+        }
+
+        
+        //Atualiza os dados da empresa (PUT request)
+       
+        function atualizarEmpresa() {
+            const idEmpresa = empresaIdInput.value;
+            const payload = {
+                id: idEmpresa,
+                nomeFantasia: nomeFantasiaInput.value,
+                cnpj: cnpjInput.value,
+                emailContato: emailInput.value,
+                endereco: enderecoInput.value,
+                descricao: descricaoInput.value
+                // O backend (JPA) ignora os campos de relacionamento (vagas) se não os enviarmos
+            };
+
+            fetch(`${URL_EMPRESAS}/${idEmpresa}`, {
+                method: "PUT",
+                body: JSON.stringify(payload),
+                headers: { "Content-type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Falha ao atualizar perfil");
+                alert("Perfil atualizado com sucesso!");
+            })
+            .catch(erro => alert(erro.message));
+        }
+
+       
+        // Carrega a tabela de vagas filtrando por ID da empresa
+    
+        function listarMinhasVagas(idEmpresa) {
+            secaoInscricoes.style.display = 'none'; // Esconde a lista de inscritos
+            corpoTabelaVagas.innerHTML = "Carregando vagas...";
+            
+            fetch(URL_VAGAS)
+                .then(res => res.json())
+                .then(vagas => {
+                    corpoTabelaVagas.innerHTML = ""; // Limpa a tabela
+                    // Filtra vagas para mostrar apenas as desta empresa
+                    const minhasVagas = vagas.filter(vaga => vaga.empresa && vaga.empresa.id == idEmpresa);
+
+                    if (minhasVagas.length === 0) {
+                        corpoTabelaVagas.innerHTML = '<tr><td colspan="5">Nenhuma vaga cadastrada.</td></tr>';
+                        return;
+                    }
+                    
+                    minhasVagas.forEach(vaga => {
+                        let linha = corpoTabelaVagas.insertRow();
+                        linha.insertCell().textContent = vaga.id;
+                        linha.insertCell().textContent = vaga.titulo;
+                        
+                        let celStatus = linha.insertCell();
+                        celStatus.textContent = vaga.ativo ? 'Ativa' : 'Fechada';
+                        celStatus.style.color = vaga.ativo ? 'green' : 'red';
+
+                        let celInscricoes = linha.insertCell();
+                        let btnInscricoes = document.createElement('button');
+                        btnInscricoes.textContent = "Ver Inscrições";
+                        btnInscricoes.onclick = () => visualizarInscricoes(vaga.id, vaga.titulo);
+                        celInscricoes.appendChild(btnInscricoes);
+                        
+                        let celAcoes = linha.insertCell();
+                        if (vaga.ativo) {
+                            let btnFechar = document.createElement('button');
+                            btnFechar.textContent = "Fechar Vaga";
+                            btnFechar.style.backgroundColor = '#d9534f';
+                            btnFechar.onclick = () => fecharVaga(vaga);
+                            celAcoes.appendChild(btnFechar);
+                        } else {
+                            celAcoes.textContent = "Vaga Encerrada";
+                        }
+                    });
+                });
+        }
+
+     
+        // Mostra a lista de estudantes inscritos para uma vaga
+       
+        function visualizarInscricoes(idVaga, tituloVaga) {
+            secaoInscricoes.style.display = 'block';
+            tituloInscricoes.textContent = `Inscrições para: ${tituloVaga} (Vaga ID: ${idVaga})`;
+            listaInscricoes.innerHTML = "<li>Carregando...</li>";
+
+            fetch(URL_INSCRICOES)
+                .then(res => res.json())
+                .then(inscricoes => {
+                    // Filtra para mostrar apenas inscricoes desta vaga
+                    const inscricoesVaga = inscricoes.filter(insc => insc.vaga && insc.vaga.id == idVaga);
+                    listaInscricoes.innerHTML = ""; // Limpa
+
+                    if (inscricoesVaga.length === 0) {
+                        listaInscricoes.innerHTML = "<li>Nenhum estudante inscrito.</li>";
+                        return;
+                    }
+
+                    inscricoesVaga.forEach(insc => {
+                        const li = document.createElement('li');
+                        const estudante = insc.estudante;
+                        li.innerHTML = `
+                            <strong>${estudante ? estudante.nome : 'Estudante desconhecido'}</strong> (ID: ${estudante ? estudante.id : 'N/A'})<br>
+                            Email: ${estudante ? estudante.email : 'N/A'}<br>
+                            Status: ${insc.status} | Data: ${insc.dataInscricao} <br>
+                            <em>"${insc.mensagemApresentacao || 'Sem mensagem'}"</em>
+                        `;
+                        listaInscricoes.appendChild(li);
+                    });
+                });
+        }
+
+       
+        // Envia um PUT para a API para fechar uma vaga (ativo = false)
+       
+        function fecharVaga(vaga) {
+            if (!confirm(`Tem certeza que deseja fechar a vaga "${vaga.titulo}"?`)) return;
+
+            // O payload só precisa do campo 'ativo' e dos relacionamentos
+            const payload = {
+                ...vaga, // Pega todos os dados existentes da vaga
+                ativo: false // Muda o status
+            };
+
+            fetch(`${URL_VAGAS}/${vaga.id}`, {
+                method: "PUT",
+                body: JSON.stringify(payload),
+                headers: { "Content-type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Falha ao fechar vaga");
+                alert("Vaga fechada com sucesso!");
+                listarMinhasVagas(vaga.empresa.id); // Atualiza a tabela
+            })
+            .catch(erro => alert(erro.message));
+        }
+        
+        // Funções do Formulário de Cadastro
+
+        function mostrarFormularioVaga() {
+            secaoCadastroVaga.style.display = 'block';
+            // Preenche a data de hoje por padrão
+            vagaDataInput.value = new Date().toISOString().split('T')[0];
+        }
+        function ocultarFormularioVaga() {
+            secaoCadastroVaga.style.display = 'none';
+        }
+
+        function cadastrarVaga() {
+            const idEmpresa = empresaIdInput.value;
+            const payload = {
+                titulo: vagaTituloInput.value,
+                descricao: vagaDescricaoInput.value,
+                dataPublicacao: vagaDataInput.value,
+                ativo: true,
+                empresa: { id: parseInt(idEmpresa, 10) }
+            };
+            
+            fetch(URL_VAGAS, {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: { "Content-type": "application/json" }
+            })
+            .then(res => res.json())
+            .then(json => {
+                alert("Vaga cadastrada com sucesso!");
+                vagaTituloInput.value = "";
+                vagaDescricaoInput.value = "";
+                ocultarFormularioVaga();
+                listarMinhasVagas(idEmpresa);
+            })
+            .catch(erro => alert("Falha ao cadastrar vaga."));
+        }
+
+    </script>
+</body>
+</html>

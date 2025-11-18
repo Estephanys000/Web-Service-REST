@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciamento de Empresas</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+</head>
+<body>
+    <h1>Gerenciamento de Empresas</h1>
+    <a href="/index.html">Voltar para a Página Inicial</a>
+    <hr>
+
+    <h2>Cadastrar Nova Empresa</h2>
+    
+    <label for="nomeFantasia">Nome Fantasia:</label>
+    <input type="text" id="nomeFantasia">
+    <br>
+
+    <label for="cnpj">CNPJ:</label>
+    <input type="text" id="cnpj">
+    <br>
+
+    <label for="email">Email de Contato:</label>
+    <input type="email" id="email">
+    <br>
+
+    <label for="endereco">Endereço:</label>
+    <input type="text" id="endereco">
+    <br>
+
+    <label for="descricao">Descrição:</label>
+    <textarea id="descricao" rows="3"></textarea>
+    <br>
+
+    <button onclick="adicionarEmpresa()">Salvar Empresa</button>
+    <hr>
+    
+    <!-- Tabela para listar todas as empresas existentes -->
+    <h2>Empresas Cadastradas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome Fantasia</th>
+                <th>CNPJ</th>
+                <th>Email</th>
+                <th>Endereço</th>
+            </tr>
+        </thead>
+        <tbody id="corpoTabelaEmpresas">
+          
+        </tbody>
+    </table>
+
+    <script>
+        // URL da API
+        const URL_EMPRESAS = '/empresas';
+
+        // Elementos do DOM (Inputs)
+        const nomeFantasiaInput = document.querySelector("#nomeFantasia");
+        const cnpjInput = document.querySelector("#cnpj");
+        const emailInput = document.querySelector("#email");
+        const enderecoInput = document.querySelector("#endereco");
+        const descricaoInput = document.querySelector("#descricao");
+        
+        // Elemento da Tabela
+        const corpoTabelaEmpresas = document.querySelector("#corpoTabelaEmpresas");
+
+        // Roda ao carregar a página
+        listarEmpresas();
+
+       
+        //Busca a lista de empresas na API e preenche a tabela
+      
+        function listarEmpresas() {
+            fetch(URL_EMPRESAS)
+                .then(resposta => resposta.json())
+                .then(json => preencherTabelaEmpresas(json))
+                .catch(erro => console.error('Erro ao listar empresas:', erro));
+        }
+
+       
+        //Recebe o JSON das empresas e preenche a tabela no HTML
+       
+        function preencherTabelaEmpresas(empresas) {
+            corpoTabelaEmpresas.innerHTML = ""; // Limpa a tabela
+
+            empresas.forEach(empresa => {
+                let linha = corpoTabelaEmpresas.insertRow();
+                let celId = linha.insertCell();
+                let celNome = linha.insertCell();
+                let celCnpj = linha.insertCell();
+                let celEmail = linha.insertCell();
+                let celEndereco = linha.insertCell();
+
+                celId.textContent = empresa.id;
+                celNome.textContent = empresa.nomeFantasia;
+                celCnpj.textContent = empresa.cnpj;
+                celEmail.textContent = empresa.email;
+                celEndereco.textContent = empresa.endereco;
+            });
+        }
+
+        /**
+         * Chamada quando o botão "Salvar Empresa" é clicado
+         * Envia um POST para a API para criar uma nova empresa
+         */
+        function adicionarEmpresa() {
+            const payload = {
+                nomeFantasia: nomeFantasiaInput.value,
+                cnpj: cnpjInput.value,
+                email: emailInput.value,
+                endereco: enderecoInput.value,
+                descricao: descricaoInput.value
+            };
+
+            fetch(URL_EMPRESAS, {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            .then(resposta => {
+                if (!resposta.ok) {
+                    throw new Error('Erro ao cadastrar empresa');
+                }
+                return resposta.json();
+            })
+            .then(json => {
+                alert("Empresa cadastrada com sucesso!");
+                // Limpa os campos do formulário
+                nomeFantasiaInput.value = "";
+                cnpjInput.value = "";
+                emailInput.value = "";
+                enderecoInput.value = "";
+                descricaoInput.value = "";
+                // Atualiza a tabela com a nova empresa
+                listarEmpresas();
+            })
+            .catch(erro => alert("Falha ao cadastrar empresa. Verifique o console."));
+        }
+    </script>
+</body>
+</html>

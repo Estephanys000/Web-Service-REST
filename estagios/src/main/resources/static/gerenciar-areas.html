@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciamento de Áreas</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+</head>
+<body>
+    <h1>Gerenciamento de Áreas de Interesse</h1>
+     <a href="/index.html">Voltar para a Página Inicial</a>
+    <hr>
+    
+    <!-- Formulário para cadastrar uma nova área -->
+    <h2>Cadastrar Nova Área</h2>
+    
+    <label for="nome">Nome da Área:</label>
+    <input type="text" id="nome">
+    <br>
+
+    <button onclick="adicionarArea()">Salvar Área</button>
+    <hr>
+    
+    <!-- Tabela para listar todas as áreas existentes -->
+    <h2>Áreas Cadastradas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="corpoTabelaAreas">
+        
+        </tbody>
+    </table>
+
+    <script>
+        // URL da API
+        const URL_AREAS = '/areas';
+
+        // Elementos do DOM (Inputs)
+        const nomeInput = document.querySelector("#nome");
+        
+        // Elemento da Tabela
+        const corpoTabelaAreas = document.querySelector("#corpoTabelaAreas");
+
+        // Roda ao carregar a página
+        listarAreas();
+
+        
+        //Busca a lista de áreas na API e preenche a tabela
+        
+        function listarAreas() {
+            fetch(URL_AREAS)
+                .then(resposta => resposta.json())
+                .then(json => preencherTabelaAreas(json))
+                .catch(erro => console.error('Erro ao listar áreas:', erro));
+        }
+
+       
+        //Recebe o JSON das áreas e preenche a tabela no HTML
+        
+        function preencherTabelaAreas(areas) {
+            corpoTabelaAreas.innerHTML = ""; // Limpa a tabela
+
+            areas.forEach(area => {
+                let linha = corpoTabelaAreas.insertRow();
+                let celId = linha.insertCell();
+                let celNome = linha.insertCell();
+                let celAcoes = linha.insertCell();
+
+                celId.textContent = area.id;
+                celNome.textContent = area.nome;
+
+                // Botão de Deletar
+                let btnDelete = document.createElement('button');
+                btnDelete.textContent = 'Excluir';
+                btnDelete.onclick = function() {
+                    deletarArea(area.id);
+                };
+                celAcoes.appendChild(btnDelete);
+            });
+        }
+
+        /**
+         * Chamada quando o botão "Salvar Área" é clicado
+         * Envia um POST para a API para criar uma nova área
+         */
+        function adicionarArea() {
+            const payload = {
+                nome: nomeInput.value
+            };
+
+            if (!payload.nome) {
+                alert("Por favor, preencha o nome da área.");
+                return;
+            }
+
+            fetch(URL_AREAS, {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            .then(resposta => {
+                if (!resposta.ok) {
+                    throw new Error('Erro ao cadastrar área');
+                }
+                return resposta.json();
+            })
+            .then(json => {
+                alert("Área cadastrada com sucesso!");
+                // Limpa os campos do formulário
+                nomeInput.value = "";
+                // Atualiza a tabela com a nova área
+                listarAreas();
+            })
+            .catch(erro => alert("Falha ao cadastrar área. Verifique o console."));
+        }
+
+       
+        //Deleta uma área pelo ID
+        
+        function deletarArea(id) {
+            if (!confirm("Tem certeza que deseja excluir esta área?")) {
+                return;
+            }
+
+            fetch(`${URL_AREAS}/${id}`, {
+                method: "DELETE"
+            })
+            .then(resposta => {
+                if (!resposta.ok) {
+                    // Se a área estiver em uso (ex: por um estudante), o backend deve retornar um erro
+                    if (resposta.status === 400 || resposta.status === 409) { 
+                        alert("Não foi possível excluir. Esta área pode estar sendo usada por um estudante.");
+                    } else {
+                        throw new Error('Erro ao excluir área. Pois há estudasntes vinculados a esta área.');
+                    }
+                } else {
+                    alert("Área excluída com sucesso!");
+                    listarAreas(); // Atualiza a tabela
+                }
+            })
+            .catch(erro => {
+                alert("Falha ao excluir área. " + erro.message);
+                console.error(erro);
+            });
+        }
+    </script>
+</body>
+</html>

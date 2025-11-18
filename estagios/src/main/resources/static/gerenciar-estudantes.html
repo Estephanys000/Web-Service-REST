@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciamento de Estudantes</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+    <style>
+        .areas-container {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .areas-container label {
+            margin-right: 15px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerenciamento de Estudantes</h1>
+    <a href="/index.html">Voltar para a Página Inicial</a>
+    <hr>
+    
+    <h2>Cadastrar Novo Estudante</h2>
+    
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome">
+    <br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email">
+    <br>
+
+    <label for="anoIngresso">Ano de Ingresso:</label>
+    <input type="number" id="anoIngresso" min="2000" max="2100">
+    <br>
+
+    <div class="areas-container">
+        <label>Áreas de Interesse:</label>
+        <div id="areasCheckboxContainer">
+            Carregando áreas...
+        </div>
+    </div>
+
+    <button onclick="adicionarEstudante()">Salvar Estudante</button>
+    <hr>
+    
+    <h2>Estudantes Cadastrados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Ano de Ingresso</th>
+            </tr>
+        </thead>
+        <tbody id="corpoTabelaEstudantes">
+            
+        </tbody>
+    </table>
+
+    <script>
+        const URL_ESTUDANTES = '/estudantes';
+        const URL_AREAS = '/areas';
+
+        const nomeInput = document.querySelector("#nome");
+        const emailInput = document.querySelector("#email");
+        const anoInput = document.querySelector("#anoIngresso");
+        const areasContainer = document.querySelector("#areasCheckboxContainer");
+        const corpoTabelaEstudantes = document.querySelector("#corpoTabelaEstudantes");
+
+        // Roda ao carregar a página
+        listarEstudantes();
+        carregarAreas();
+
+        
+         // Busca a lista de áreas e cria os checkboxes
+       
+        function carregarAreas() {
+            fetch(URL_AREAS)
+                .then(res => res.json())
+                .then(areas => {
+                    areasContainer.innerHTML = "";
+                    if (areas.length === 0) {
+                        areasContainer.innerHTML = "Nenhuma área cadastrada. <a href='/gerenciar-areas.html'>Cadastre uma área</a> primeiro.";
+                        return;
+                    }
+                    areas.forEach(area => {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.id = `area-${area.id}`;
+                        checkbox.value = area.id;
+                        checkbox.name = "area";
+
+                        const label = document.createElement('label');
+                        label.htmlFor = `area-${area.id}`;
+                        label.textContent = area.nome;
+                        
+                        areasContainer.appendChild(checkbox);
+                        areasContainer.appendChild(label);
+                    });
+                })
+                .catch(erro => console.error("Erro ao carregar áreas:", erro));
+        }
+
+        function listarEstudantes() {
+            fetch(URL_ESTUDANTES)
+                .then(resposta => resposta.json())
+                .then(json => preencherTabelaEstudantes(json))
+                .catch(erro => console.error('Erro ao listar estudantes:', erro));
+        }
+
+        function preencherTabelaEstudantes(estudantes) {
+            corpoTabelaEstudantes.innerHTML = ""; 
+            estudantes.forEach(estudante => {
+                let linha = corpoTabelaEstudantes.insertRow();
+                linha.insertCell().textContent = estudante.id;
+                linha.insertCell().textContent = estudante.nome;
+                linha.insertCell().textContent = estudante.email;
+                linha.insertCell().textContent = estudante.anoIngresso;
+            });
+        }
+
+       
+         //Adiciona um estudante
+        
+        function adicionarEstudante() {
+            // Pega todos os checkboxes de área que estão marcados
+            const areasSelecionadas = [];
+            document.querySelectorAll("input[name='area']:checked").forEach(checkbox => {
+                areasSelecionadas.push({ id: parseInt(checkbox.value, 10) });
+            });
+
+            const payload = {
+                nome: nomeInput.value,
+                email: emailInput.value,
+                anoIngresso: parseInt(anoInput.value, 10),
+                areasDeInteresse: areasSelecionadas // Adiciona o array de áreas
+            };
+
+            if (!payload.nome || !payload.email || !payload.anoIngresso) {
+                alert("Por favor, preencha nome, email e ano de ingresso.");
+                return;
+            }
+
+            fetch(URL_ESTUDANTES, {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: { "Content-type": "application/json" }
+            })
+            .then(resposta => {
+                if (!resposta.ok) {
+                    throw new Error('Erro ao cadastrar estudante');
+                }
+                return resposta.json();
+            })
+            .then(json => {
+                alert("Estudante cadastrado com sucesso!");
+                nomeInput.value = "";
+                emailInput.value = "";
+                anoInput.value = "";
+                // Desmarca todos os checkboxes
+                document.querySelectorAll("input[name='area']:checked").forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                listarEstudantes();
+            })
+            .catch(erro => alert("Falha ao cadastrar estudante."));
+        }
+    </script>
+</body>
+</html>
